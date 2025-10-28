@@ -1,0 +1,21 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+y1,x1 = 10,10
+y2,x2 = 50,90
+
+latar_hitam = np.zeros(shape=(100,100,3), dtype=np.uint8)
+gambar = latar_hitam
+gambar[y1,x1] = [0,0,255]
+gambar[y2,x2] = [0,0,255]
+m = (y2-y1) / (x2-x1)
+
+for x in range(x1, x2 + 1):
+    y = m * (x - x1) + y1
+    y = int(y)
+    gambar[y,x] = [0,0,255]
+
+plt.figure(1)
+plt.imshow(gambar)
+plt.title
+plt.show()
