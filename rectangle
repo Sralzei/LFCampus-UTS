@@ -1,0 +1,50 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def create_a_line(canvas, y1, x1, y2, x2, line_width, color):
+    half_width = int(round(line_width / 2))   # setengah ketebalan garis
+    
+    # hitung delta x dan delta y
+    abs_y = abs(int(round(y2 - y1)))
+    abs_x = abs(int(round(x2 - x1)))
+    
+    if abs_y > abs_x:
+        jml_step = abs_y
+    else:
+        jml_step = abs_x
+    
+    dy = (y2 - y1) / jml_step
+    dx = (x2 - x1) / jml_step
+    
+    y = y1
+    x = x1
+    
+    for i in range(0, jml_step + 1):
+        y_idx = int(round(y))
+        x_idx = int(round(x))
+        
+        # kasih warna dengan ketebalan
+        if (y_idx - half_width >= 0 and y_idx + half_width < canvas.shape[0] and
+            x_idx - half_width >= 0 and x_idx + half_width < canvas.shape[1]):
+            canvas[y_idx - half_width : y_idx + half_width + 1,
+                   x_idx - half_width : x_idx + half_width + 1] = color
+        
+        y = y + dy
+        x = x + dx
+    
+    return canvas
+
+def create_a_rectangle(canvas, y1, x1, y2, x2, y3, x3, y4, x4, lw, col):
+    canvas = create_a_line(canvas, y1, x1, y2, x2, lw, col)  # sisi 1
+    canvas = create_a_line(canvas, y2, x2, y3, x3, lw, col)  # sisi 2
+    canvas = create_a_line(canvas, y3, x3, y4, x4, lw, col)  # sisi 3
+    canvas = create_a_line(canvas, y4, x4, y1, x1, lw, col)  # sisi 4
+    return canvas
+
+# MAIN PROGRAM
+canvas = np.zeros((1000, 1000, 3), dtype=np.uint8)
+hasil = create_a_rectangle(canvas, 100,100, 100,400, 400,400, 400,100, 5, (65,0,0))
+
+plt.figure(1)
+plt.imshow(hasil)
+plt.show()
