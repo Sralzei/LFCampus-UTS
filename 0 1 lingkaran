@@ -1,0 +1,7 @@
+gambar = np.ones(shape=(30,30), dtype=np.uint8)
+
+for y in range(0,30):
+               for x in range(0,30):
+                   if (y - 15)**2 + (x - 15)**2 <= 12**2:
+                       gambar[y,x] = 0
+print(gambar)
