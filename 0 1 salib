@@ -1,0 +1,7 @@
+import numpy as np 
+gambar = np.ones(shape=(30,30), dtype=np.uint8)
+
+gambar[14,:] = 0
+gambar[:,14] = 0
+
+print(gambar)
