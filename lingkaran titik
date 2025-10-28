@@ -1,0 +1,43 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Ukuran kanvas
+gambar = np.zeros((200, 200, 3), dtype=np.uint8)
+
+# Titik tengah dan jari-jari
+xc, yc = 100, 100
+r = 40
+
+# Fungsi Midpoint Circle Algorithm
+def lingkaran(xc, yc, r, warna):
+    x = r
+    y = 0
+    p = 1 - r
+
+    while x >= y:
+        titik = [
+            (yc + y, xc + x),
+            (yc + x, xc + y),
+            (yc + x, xc - y),
+            (yc + y, xc - x),
+            (yc - y, xc - x),
+            (yc - x, xc - y),
+            (yc - x, xc + y),
+            (yc - y, xc + x)
+        ]
+        for yy, xx in titik:
+            if 0 <= yy < gambar.shape[0] and 0 <= xx < gambar.shape[1]:
+                gambar[int(yy), int(xx)] = warna
+        y += 1
+        if p <= 0:
+            p = p + 2 * y + 1
+        else:
+            x -= 1
+            p = p + 2 * y - 2 * x + 1
+
+# Gambar lingkaran
+lingkaran(xc, yc, r, [0, 255, 255])  # cyan
+
+plt.imshow(gambar)
+plt.title("Lingkaran dengan Garis")
+plt.show()
