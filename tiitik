@@ -1,0 +1,14 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+y1,x1 = 10,10
+y2,x2 = 50,90
+
+latar_hitam = np.zeros(shape=(100,100,3), dtype=np.uint8)
+gambar = latar_hitam
+gambar[y1,x1] = [0,0,255]
+gambar[y2,x2] = [0,0,255]
+
+plt.figure(1)
+plt.imshow(gambar)
+plt.show()
