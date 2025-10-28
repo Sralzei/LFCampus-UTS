@@ -1,0 +1,74 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def create_a_line(canvas, y1, x1, y2, x2, line_width, color):
+    half_width = int(round(line_width / 2))   # setengah ketebalan garis
+    
+    abs_y = abs(int(round(y2 - y1)))
+    abs_x = abs(int(round(x2 - x1)))
+    
+    jml_step = max(abs_y, abs_x)
+    dy = (y2 - y1) / jml_step
+    dx = (x2 - x1) / jml_step
+    
+    y = y1
+    x = x1
+    
+    for i in range(jml_step + 1):
+        y_idx = int(round(y))
+        x_idx = int(round(x))
+        
+        if (y_idx - half_width >= 0 and y_idx + half_width < canvas.shape[0] and
+            x_idx - half_width >= 0 and x_idx + half_width < canvas.shape[1]):
+            canvas[y_idx - half_width : y_idx + half_width,
+                   x_idx - half_width : x_idx + half_width] = color
+        y += dy
+        x += dx
+    
+    return canvas
+
+
+def create_right_triangle(canvas, y1, x1, y2, x2, y3, x3, lw, col, fill=True):
+    if fill:
+        # isi segitiga dengan scanline horizontal
+        y_min = min(y1, y2, y3)
+        y_max = max(y1, y2, y3)
+        
+        for y in range(y_min, y_max + 1):
+            # cari batas kiri-kanan di baris y dengan interpolasi
+            x_coords = []
+            pts = [(y1, x1), (y2, x2), (y3, x3)]
+            for i in range(3):
+                y_a, x_a = pts[i]
+                y_b, x_b = pts[(i+1)%3]
+                if y_a == y_b:  # garis horizontal
+                    continue
+                if (y >= min(y_a, y_b)) and (y <= max(y_a, y_b)):
+                    t = (y - y_a) / (y_b - y_a)
+                    x_val = int(round(x_a + t*(x_b - x_a)))
+                    x_coords.append(x_val)
+            if len(x_coords) == 2:
+                x_left, x_right = min(x_coords), max(x_coords)
+                canvas[y, x_left:x_right+1] = col
+    else:
+        # hanya outline segitiga
+        canvas = create_a_line(canvas, y1, x1, y2, x2, lw, col)
+        canvas = create_a_line(canvas, y2, x2, y3, x3, lw, col)
+        canvas = create_a_line(canvas, y3, x3, y1, x1, lw, col)
+    return canvas
+
+
+# MAIN PROGRAM
+row, col = 600, 600
+canvas = np.zeros((row, col, 3), dtype=np.uint8)
+
+# titik segitiga siku-siku (A, B, C)
+y1, x1 = 100, 100  # titik A
+y2, x2 = 400, 100  # titik B
+y3, x3 = 400, 400  # titik C
+
+hasil = create_right_triangle(canvas, y1, x1, y2, x2, y3, x3, 3, (65,0,0), fill=True)
+
+plt.figure()
+plt.imshow(hasil)
+plt.show()
